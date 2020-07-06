@@ -1,0 +1,26 @@
+{
+  "name": "galvanize-dating-app",
+  "version": "1.0.0",
+  "description": "users component for dating app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/taylorjason/galvanize-dating-app.git"
+  },
+  "author": "Jason Taylor",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/taylorjason/galvanize-dating-app/issues"
+  },
+  "homepage": "https://github.com/taylorjason/galvanize-dating-app#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "nodemon": "^2.0.4"
+  },
+  "devDependencies": {
+    "faker": "^4.1.0"
+  }
+}
