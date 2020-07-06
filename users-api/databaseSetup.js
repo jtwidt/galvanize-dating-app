@@ -14,18 +14,17 @@ let users = JSON.parse(fs.readFileSync("../fakeUsers.json"));
 let setUpDatabase = () => {
   db.query("DROP TABLE IF EXISTS account, profile CASCADE")
     .then(() => {
+      console.log("Dropped tables");
       return db.query(
-        "CREATE TABLE account (id serial NOT NULL,first_name VARCHAR(64) NOT NULL,last_name VARCHAR(64) NOT NULL,email VARCHAR(128) NOT NULL,password VARCHAR(32) NOT NULL,creation_date TIMESTAMP DEFAULT Now(),deactivated bool DEFAULT false,deactivated_at TIMESTAMP, PRIMARY KEY (id));",
-        (err, results) => (err ? console.log(err) : console.log("db created"))
+        "CREATE TABLE account (id serial NOT NULL,first_name VARCHAR(64) NOT NULL,last_name VARCHAR(64) NOT NULL,email VARCHAR(128) NOT NULL,password VARCHAR(32) NOT NULL,creation_date TIMESTAMP DEFAULT Now(),deactivated bool DEFAULT false,deactivated_at TIMESTAMP, PRIMARY KEY (id));"
       );
     })
     .then(() => {
       for (let idx in users) {
         let user = users[idx];
         db.query(
-          "INSERT INTO account (id, first_name, last_name, email, password) VALUES ($1, $2, $3, $4, $5)",
+          "INSERT INTO account (first_name, last_name, email, password) VALUES ($1, $2, $3, $4)",
           [
-            Number(idx) + 1,
             user.first_name,
             user.last_name,
             faker.internet.email(),
@@ -78,4 +77,4 @@ module.exports = {
   setUpDatabase,
 };
 
-// setUpDatabase();
+setUpDatabase();
