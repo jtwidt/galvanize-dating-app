@@ -5,16 +5,19 @@ const express = require("express");
 const query = require("./queries");
 const app = express();
 const PORT = 3000;
-const db = new Pool({
-  user: "dev",
-  host: "localhost",
-  database: "galvanize_dating_app",
-  password: "dev-password",
-  port: 5432,
-});
+// const db = new Pool({
+//   user: "dev",
+//   host: "localhost",
+//   database: "galvanize_dating_app",
+//   password: "dev-password",
+//   port: 5432,
+// });
 
 app.use(bodyParser.json());
 
 app.get("/users/", query.getUsers);
+app.get("/users/:userid", query.getUsers);
+
+app.post("/users", query.postUser);
 
 app.listen(PORT, () => console.log(`Listening on http://localhost:${PORT}`));
