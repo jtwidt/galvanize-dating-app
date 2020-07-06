@@ -1,0 +1,6 @@
+Select statement for getting all conversations with a specific user
+-----------------------------------------------------------------------------------------------------------------
+SELECT c.id as ConvoId, m.id as MsgId, m.sender_id as Sender, m.reciever_id as Reciever, m.message as Message
+FROM conversations c
+INNER JOIN messages m ON m.conversation_id = c.id
+WHERE user1_id = 1 OR user2_id = 1;
