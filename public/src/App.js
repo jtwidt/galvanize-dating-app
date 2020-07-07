@@ -1,18 +1,34 @@
 import React from "react";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+  NavLink,
+} from "react-router-dom";
 import "./App.css";
 import SignUp from "./components/SignUp";
 import Profile from "./components/Profile";
 import Login from "./components/Login";
 
 function App() {
+  const [userId, setuserId] = useState(1);
+
+  useEffect(() => {
+    // return () => {
+    //   cleanup
+    // }
+  }, [userId]);
+
   return (
     <Router>
       <div className="App">
-        <div className="ui secondary  menu">
-          <div className="item">
-            <Link to="/signup">Home</Link>
-          </div>
+        <div className="ui pointing menu">
+          {/* #FIXME Add change to active pointer */}
+          <NavLink to="/signup" className="item" activeClassName="active">
+            Home
+          </NavLink>
           <div className="right menu">
             {/* <div className="item">
             <div className="ui icon input">
@@ -20,12 +36,14 @@ function App() {
               <i className="search link icon"></i>
             </div>
           </div> */}
-            <a className="item">
-              <Link to="/profile">Profile</Link>
-            </a>
-            <a className="ui item">
-              <Link to="/login">Login</Link>
-            </a>
+            {/* <div className="item"> */}
+            <NavLink to="/profile" className="item" activeClassName="active">
+              Profile
+            </NavLink>
+            {/* </div> */}
+            <NavLink to="/login" className="item" activeClassName="active">
+              Login
+            </NavLink>
           </div>
         </div>
       </div>
@@ -33,11 +51,14 @@ function App() {
         <Route path="/login">
           <Login />
         </Route>
+        <Route exact path="/">
+          <Redirect to="/signup" />
+        </Route>
         <Route path="/signup">
           <SignUp />
         </Route>
         <Route path="/profile">
-          <Profile />
+          <Profile userId={userId} />
         </Route>
       </Switch>
     </Router>
