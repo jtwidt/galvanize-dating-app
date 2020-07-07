@@ -10,7 +10,7 @@ const pool = new Pool({
 });
 
 const getChats = (request, response) => {
-  let loggedUser = parseInt(request.params.userId);
+  let loggedUser = parseInt(request.params.user_id);
   pool.query(
     'SELECT id, user1_id, user2_id FROM conversations WHERE user1_id = $1 OR user2_id = $1',
     [loggedUser],
@@ -24,9 +24,9 @@ const getChats = (request, response) => {
 };
 
 const getConversation = (request, response) => {
-  let conversationId = parseInt(request.params.conversationId);
+  let conversationId = parseInt(request.params.conversation_id);
   pool.query(
-    'SELECT c.id as ConvoId, m.id as MsgId, m.sender_id as Sender, m.reciever_id as Reciever, m.message as Message, m.sent_time as Time FROM conversations c INNER JOIN messages m ON m.conversation_id = c.id WHERE c.id = $1',
+    'SELECT c.id as ConvoId, m.id as MsgId, m.sender_id as Sender, m.reciever_id as Reciever, m.message as Message, m.sent_time as Time FROM conversations c INNER JOIN messages m ON m.conversation_id = c.id WHERE c.id = $1 ORDER BY MsgId',
     [conversationId],
     (error, results) => {
       if (error) {
@@ -38,7 +38,7 @@ const getConversation = (request, response) => {
 };
 
 const addMessage = (request, response) => {
-  let conversationId = parseInt(request.params.conversationId);
+  let conversationId = parseInt(request.params.conversation_id);
   let { sender, reciever, message } = request.body;
   if (sender && reciever && message) {
     pool.query(
@@ -94,9 +94,11 @@ const deleteConversations = (request, response) => {
           if (error) {
             throw error;
           }
-          response.send(
-            JSON.stringify(`Conversation with conversation id ${id} deleted`)
-          );
+          response
+            .status(200)
+            .send(
+              JSON.stringify(`Conversation with conversation id ${id} deleted`)
+            );
         }
       );
       break;
@@ -108,9 +110,9 @@ const deleteConversations = (request, response) => {
           if (error) {
             throw error;
           }
-          response.send(
-            JSON.stringify(`Conversations with user id ${id} deleted`)
-          );
+          response
+            .status(200)
+            .send(JSON.stringify(`Conversations with user id ${id} deleted`));
         }
       );
       break;
