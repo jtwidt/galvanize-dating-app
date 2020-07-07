@@ -21,29 +21,6 @@ const Dashboard = (props) => {
     setRerender(true);
   };
 
-  const recieverClickedChat = () => {
-    return selectedChat[selectedChat.length - 1].sender !== currentUserId;
-  };
-
-  const messageRead = () => {
-    if (selectedChat !== null) {
-      let reciever =
-        selectedChat[0].sender === currentUserId
-          ? selectedChat[0].reciever
-          : selectedChat[0].sender;
-      if (recieverClickedChat) {
-        axios.put(
-          `http://localhost:3000/api/messages/${selectedChatId}/${reciever}`,
-          null
-        );
-        setRerender(true);
-        console.log('Messages marked read');
-      } else {
-        console.log('Clicked message where user was the sender');
-      }
-    }
-  };
-
   const changeUser = (userId) => {
     if (currentUserId === 1) {
       setCurrentUserId(5);
@@ -91,7 +68,6 @@ const Dashboard = (props) => {
       };
       fetchChatData();
       setRerender(false);
-      // messageRead();
     }
   }, [selectedChatId, rerender]);
 
@@ -128,10 +104,7 @@ const Dashboard = (props) => {
           ></ChatView>
         )}
         {selectedChat !== null && !newChatFormVisible ? (
-          <ChatTextBox
-            submitMsg={submitMsg}
-            // messageRead={messageRead}
-          ></ChatTextBox>
+          <ChatTextBox submitMsg={submitMsg}></ChatTextBox>
         ) : null}
         <Button
           variant="contained"

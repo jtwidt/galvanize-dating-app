@@ -8,7 +8,6 @@ import Avatar from '@material-ui/core/Avatar';
 import styles from './styles';
 import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
-import Badge from '@material-ui/core/Badge';
 
 const ChatList = (props) => {
   const { classes } = props;

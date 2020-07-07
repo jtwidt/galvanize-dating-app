@@ -13,7 +13,6 @@ const ChatTextBox = (props) => {
   };
 
   const userClickedInput = () => {
-    // props.messageRead();
     console.log('input clicked');
   };
 
