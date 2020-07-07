@@ -46,7 +46,13 @@ const getUsers = (req, res) => {
 
 const postUser = (req, res, next) => {
   let user = req.body;
-  let userProps = ["first_name", "last_name", "email", "password"];
+  let userProps = [
+    "first_name",
+    "last_name",
+    "email",
+    "password",
+    "display_name",
+  ];
   for (let key of userProps) {
     if (!user[key] || user[key] === "") {
       response.message = "ERROR - All fields must have a value";
@@ -58,18 +64,25 @@ const postUser = (req, res, next) => {
 
   //   #TODO: Add check for exisiting user by email
 
+  console.log("running postUser");
   db.query(
-    "INSERT INTO account (first_name, last_name, email, password) VALUES ($1, $2, $3, $4)",
+    "INSERT INTO account (first_name, last_name, email, password) VALUES ($1, $2, $3, $4) RETURNING id",
     [user.first_name, user.last_name, user.email, md5(user.password)]
   )
-    .then((results) => {
-      if (results.rowCount === 1) {
-        res.status(200).send("Account created");
+    .then((result) => {
+      console.log("result.id", result);
+      if (result.rowCount === 1) {
+        return db.query(
+          "INSERT INTO profile (id, display_name) VALUES ($1, $2)",
+          [result.rows[0].id, user.display_name]
+        );
       }
     })
+    .then((result) => res.status(200).send("Account created"))
     .catch((err) => {
       response.message = "ERROR";
-      response.data = err;
+      response.data = err.message;
+      res.status(400).send(response);
     });
 };
 
@@ -172,10 +185,55 @@ const getProfile = (req, res) => {
   });
 };
 
+const putProfile = (req, res) => {
+  let id = req.params.userid;
+  let body = req.body;
+  if (!id) {
+    console.log("should respond with", response);
+    res.status(204).send(response);
+  }
+  // get user from db based on id
+  db.query("SELECT * FROM profile WHERE id = $1", [Number(id)])
+    .then((result) => {
+      //if user exists (ie. db returns a row)
+      if (result.rowCount === 1) {
+        let user = result.rows[0];
+        // iterate through body to find the fields provided to be udpated
+        for (let fieldToUpdate in body) {
+          //if property is in user object then update it...prevent bad fields being provided
+          if (Object.keys(user).includes(fieldToUpdate)) {
+            user[fieldToUpdate] = body[fieldToUpdate];
+          }
+        }
+        return db.query(
+          "UPDATE profile SET display_name = $1, avatar = $2, bio = $3, number_of_cats = $4, zodiac = $5, zipcode = $6 WHERE id = $7 RETURNING *",
+          [
+            user.display_name,
+            user.avatar,
+            user.bio,
+            user.number_of_cats,
+            user.zodiac,
+            user.zipcode,
+            user.id,
+          ]
+        );
+      } else {
+        response.message = "ERROR - User with that ID not found";
+        res.status(404).send(response);
+      }
+    })
+    .then((result) => {
+      response.message = "Updated user: " + result.rows[0].id;
+      response.data = result.rows;
+      res.status(200).send(response);
+    });
+};
+
 module.exports = {
   getUsers,
   postUser,
   putUser,
   deleteUser,
   getProfile,
+  putProfile,
 };

@@ -12,7 +12,9 @@ Content-Type: application/json
     "first_name":"Jay",
     "last_name":"Dizzle",
     "email": "jDizzy@inTheHouse.co",
-    "password":"password"
+    "password":"password",
+    "display_name":"jDizzy"
+
 }
 
 ###
@@ -30,4 +32,12 @@ DELETE http://localhost:3010/api/v1/users/33
 http://localhost:3010/api/v1/users/profile
 
 ###
-http://localhost:3010/api/v1/users/profile/110
+http://localhost:3010/api/v1/users/profile/1
+
+###
+PUT http://localhost:3010/api/v1/users/profile/1
+Content-Type: application/json
+
+{
+    "display_name":"newDisplayName"
+}
