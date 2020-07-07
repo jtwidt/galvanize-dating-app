@@ -9,7 +9,7 @@ function SignUp() {
       <div className="eight wide column">
         <div className="ui container">
           <h1 className="ui center aligned icon header">
-            <i className="lock icon"></i>Sign Up
+            <i className="user plus icon"></i>Sign Up
           </h1>
           <form className="ui form">
             <div className="field">
@@ -36,6 +36,7 @@ function SignUp() {
               <label>Verify Password</label>
               <input type="text"></input>{" "}
             </div>
+            <button class="ui primary button">Create Account</button>
           </form>
         </div>
       </div>
