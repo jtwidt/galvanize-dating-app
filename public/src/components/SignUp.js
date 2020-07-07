@@ -36,7 +36,9 @@ function SignUp() {
               <label>Verify Password</label>
               <input type="text"></input>{" "}
             </div>
-            <button class="ui primary button">Create Account</button>
+            <button class="ui right floated primary button">
+              Create Account
+            </button>
           </form>
         </div>
       </div>

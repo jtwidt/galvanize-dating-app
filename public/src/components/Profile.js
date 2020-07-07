@@ -1,8 +1,8 @@
 import React from "react";
 import { useState } from "react";
 
-function Profile() {
-  const [user, setProfile] = useState({});
+function Profile({ userProfile }) {
+  const [user, setProfile] = useState(userProfile);
 
   return (
     <div className="ui centered grid">
@@ -56,7 +56,7 @@ function Profile() {
                 </div>
               </div>
             </div> */}
-            <button class="ui primary button">Update</button>
+            <button class="ui right floated primary button">Update</button>
           </form>
         </div>
       </div>
