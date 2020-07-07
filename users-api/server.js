@@ -4,20 +4,19 @@ const express = require("express");
 // const setUp = require("./databaseSetup");
 const query = require("./queries");
 const app = express();
-const PORT = 3000;
-// const db = new Pool({
-//   user: "dev",
-//   host: "localhost",
-//   database: "galvanize_dating_app",
-//   password: "dev-password",
-//   port: 5432,
-// });
-
+const PORT = 3010;
+const baseURL = "/api/v1/";
+//app.use setup
 app.use(bodyParser.json());
 
-app.get("/users/", query.getUsers);
-app.get("/users/:userid", query.getUsers);
+//user routes
+app.get(baseURL + "users/", query.getUsers);
+app.get(baseURL + "users/:userid", query.getUsers);
+app.post(baseURL + "users/", query.postUser);
+app.put(baseURL + "users/", query.putUser);
+app.put(baseURL + "users/:userid", query.putUser);
+app.delete(baseURL + "users/:userid", query.deleteUser);
 
-app.post("/users", query.postUser);
+// profile routes
 
 app.listen(PORT, () => console.log(`Listening on http://localhost:${PORT}`));
