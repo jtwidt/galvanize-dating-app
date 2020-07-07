@@ -4,6 +4,7 @@ import axios from 'axios';
 import { Button, withStyles } from '@material-ui/core';
 import styles from './styles';
 import ChatView from '../chatview/ChatView';
+import ChatTextBox from '../chattextbox/ChatTextBox';
 
 const Dashboard = (props) => {
   const [selectedChatId, setSelectedChatId] = useState(null);
@@ -12,17 +13,60 @@ const Dashboard = (props) => {
   const [allUsers, setAllUsers] = useState([]);
   const [newChatFormVisible, setNewChatFormVisible] = useState(false);
   const [selectedChat, setSelectedChat] = useState(null);
+  const [sendMsg, setSendMsg] = useState(null);
+  const [rerender, setRerender] = useState(true);
 
   const selectChat = (chatIndex) => {
     setSelectedChatId(chatIndex);
+    setRerender(true);
+  };
+
+  const recieverClickedChat = () => {
+    return selectedChat[selectedChat.length - 1].sender !== currentUserId;
+  };
+
+  const messageRead = () => {
+    if (selectedChat !== null) {
+      let reciever =
+        selectedChat[0].sender === currentUserId
+          ? selectedChat[0].reciever
+          : selectedChat[0].sender;
+      if (recieverClickedChat) {
+        axios.put(
+          `http://localhost:3000/api/messages/${selectedChatId}/${reciever}`,
+          null
+        );
+        setRerender(true);
+        console.log('Messages marked read');
+      } else {
+        console.log('Clicked message where user was the sender');
+      }
+    }
   };
 
   const changeUser = (userId) => {
     if (currentUserId === 1) {
-      setCurrentUserId(2);
+      setCurrentUserId(5);
     } else {
       setCurrentUserId(1);
     }
+    setSelectedChat(null);
+    setSelectedChatId(null);
+    setRerender(true);
+  };
+
+  const submitMsg = (msg) => {
+    let otherUserId =
+      selectedChat[0].sender === currentUserId
+        ? selectedChat[0].reciever
+        : selectedChat[0].sender;
+
+    let msgObj = {
+      sender: currentUserId,
+      reciever: otherUserId,
+      message: msg,
+    };
+    setSendMsg(msgObj);
   };
 
   useEffect(() => {
@@ -33,15 +77,34 @@ const Dashboard = (props) => {
       setChats(response.data);
       const usersResponse = await axios.get('http://localhost:3000/users');
       setAllUsers(usersResponse.data);
-      if (selectedChatId !== null) {
+    };
+    fetchData();
+  }, [currentUserId]);
+
+  useEffect(() => {
+    if (selectedChatId !== null && rerender === true) {
+      const fetchChatData = async () => {
         const chatResponse = await axios.get(
           `http://localhost:3000/api/messages/${selectedChatId}`
         );
         setSelectedChat(chatResponse.data);
-      }
-    };
-    fetchData();
-  }, [currentUserId, selectedChatId]);
+      };
+      fetchChatData();
+      setRerender(false);
+      // messageRead();
+    }
+  }, [selectedChatId, rerender]);
+
+  useEffect(() => {
+    if (sendMsg !== null) {
+      axios.post(
+        `http://localhost:3000/api/messages/${selectedChatId}`,
+        sendMsg
+      );
+      setSendMsg(null);
+      setRerender(true);
+    }
+  }, [sendMsg]);
 
   const { classes } = props;
 
@@ -61,8 +124,15 @@ const Dashboard = (props) => {
           <ChatView
             currentUser={currentUserId}
             selectedChat={selectedChat}
+            allUsers={allUsers}
           ></ChatView>
         )}
+        {selectedChat !== null && !newChatFormVisible ? (
+          <ChatTextBox
+            submitMsg={submitMsg}
+            // messageRead={messageRead}
+          ></ChatTextBox>
+        ) : null}
         <Button
           variant="contained"
           color="primary"

@@ -26,8 +26,22 @@ const getChats = (request, response) => {
 const getConversation = (request, response) => {
   let conversationId = parseInt(request.params.conversation_id);
   pool.query(
-    'SELECT c.id as ConvoId, m.id as MsgId, m.sender_id as Sender, m.reciever_id as Reciever, m.message as Message, m.sent_time as Time FROM conversations c INNER JOIN messages m ON m.conversation_id = c.id WHERE c.id = $1 ORDER BY MsgId',
+    'SELECT conversation_id as convoid, id as msgid, sender_id as sender, reciever_id as reciever, message, sent_time as time FROM messages WHERE conversation_id = $1 ORDER BY msgid',
     [conversationId],
+    (error, results) => {
+      if (error) {
+        throw error;
+      }
+      response.status(200).send(JSON.stringify(results.rows));
+    }
+  );
+};
+
+const getUnread = (request, response) => {
+  let userId = parseInt(request.params.user_id);
+  pool.query(
+    'SELECT DISTINCT conversation_id FROM messages WHERE has_read = false AND reciever_id = $1',
+    [userId],
     (error, results) => {
       if (error) {
         throw error;
@@ -119,10 +133,30 @@ const deleteConversations = (request, response) => {
   }
 };
 
+const updateRead = (request, response) => {
+  let conversationId = parseInt(request.params.conversation_id);
+  let recieverId = parseInt(request.params.reciever_id);
+
+  pool.query(
+    'UPDATE messages SET has_read=true WHERE reciever_id = $1 AND conversation_id = $2',
+    [recieverId, conversationId],
+    (error, results) => {
+      if (error) {
+        throw error;
+      }
+      response
+        .status(201)
+        .send(JSON.stringify('All messages have been marked read'));
+    }
+  );
+};
+
 module.exports = {
   getChats,
   getConversation,
   addMessage,
   addConversation,
   deleteConversations,
+  updateRead,
+  getUnread,
 };

@@ -5,12 +5,10 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemText from '@material-ui/core/ListItemText';
 import Avatar from '@material-ui/core/Avatar';
-import Typography from '@material-ui/core/Typography';
 import styles from './styles';
 import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import NotificationImportant from '@material-ui/icons/NotificationImportant';
+import Badge from '@material-ui/core/Badge';
 
 const ChatList = (props) => {
   const { classes } = props;
@@ -38,6 +36,9 @@ const ChatList = (props) => {
         <List>
           {props.chats.map((chat, index) => {
             let otherUserId;
+            let avatarImg;
+            let firstName;
+            let lastName;
             if (chat.user1_id === props.currentUser) {
               otherUserId = chat.user2_id;
             } else {
@@ -46,6 +47,11 @@ const ChatList = (props) => {
             let otherUser = props.allUsers.filter(
               (user) => user.id === otherUserId
             );
+            if (otherUser.length > 0) {
+              avatarImg = otherUser[0].avatar;
+              firstName = otherUser[0].first_name;
+              lastName = otherUser[0].last_name;
+            }
             return (
               <div key={chat.id}>
                 <ListItem
@@ -55,13 +61,11 @@ const ChatList = (props) => {
                   alignItems="flex-start"
                 >
                   <ListItemAvatar>
-                    <Avatar
-                      src={
-                        'https://s3.amazonaws.com/uifaces/faces/twitter/jimmuirhead/128.jpg'
-                      }
-                    />
+                    <Avatar alt="Joe Kerr" src={avatarImg} />
                   </ListItemAvatar>
-                  <ListItemText primary="Bob Jones"></ListItemText>
+                  <ListItemText
+                    primary={`${firstName} ${lastName}`}
+                  ></ListItemText>
                 </ListItem>
                 <Divider></Divider>
               </div>

@@ -15,14 +15,17 @@ app.use(
 
 app.get('/api/messageList/:user_id', db.getChats);
 app.get('/api/messages/:conversation_id', db.getConversation);
+app.get('/api/unread/:user_id', db.getUnread);
 
 app.post('/api/messages/:conversation_id', db.addMessage);
 app.post('/api/messages', db.addConversation);
 
 app.delete('/api/messages/:type/:id', db.deleteConversations);
 
+app.put('/api/messages/:conversation_id/:user_id', db.updateRead);
+
 // Temporary until other endpoints are configured
-app.get('/users/:user_id', (request, response) => {
+app.get('/users/:reciever_id', (request, response) => {
   let userId = request.params.user_id;
   const filteredUsers = users.filter((user) => user.id === user_id);
   response.send(filteredUsers);
