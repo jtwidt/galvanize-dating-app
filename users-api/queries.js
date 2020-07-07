@@ -126,7 +126,7 @@ const deleteUser = (req, res) => {
         if (result.rows[0].deactivated === true) {
           response.message = "user is already deactivated";
           res.status(200).send(response);
-          return "alreadyDeactivated";
+          return "alreadyDeactivated"; // #REFACTOR: Find a better way to break out of the promise and exit function
         }
         return db.query(
           "UPDATE account SET deactivated = true, deactivated_at = now() WHERE id = $1 RETURNING id, deactivated, deactivated_at",
@@ -148,9 +148,34 @@ const deleteUser = (req, res) => {
     .catch((err) => res.status(400).send(err));
 };
 
+const getProfile = (req, res) => {
+  let id = req.params.userid;
+  if (!id) {
+    // #FIXME Doesn't provide this response if no id is provided
+    console.log("should respond with", response);
+    res.status(404).send(response);
+  }
+
+  db.query(
+    "SELECT profile.*, a.first_name, a.last_name, a.deactivated FROM profile JOIN account AS a ON profile.id = a.id WHERE profile.id = $1;",
+    [Number(id)]
+  ).then((result) => {
+    if (result.rowCount === 1) {
+      response.message = "OK";
+      response.data = result.rows;
+      res.status(200).send(response);
+    } else {
+      response.message = "ERROR - User with that ID not found";
+      response.data = [];
+      res.status(404).send(response);
+    }
+  });
+};
+
 module.exports = {
   getUsers,
   postUser,
   putUser,
   deleteUser,
+  getProfile,
 };

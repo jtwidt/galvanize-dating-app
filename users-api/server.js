@@ -18,5 +18,6 @@ app.put(baseURL + "users/:userid", query.putUser);
 app.delete(baseURL + "users/:userid", query.deleteUser);
 
 // profile routes
+app.get(baseURL + "users/profile/:userid", query.getProfile);
 
 app.listen(PORT, () => console.log(`Listening on http://localhost:${PORT}`));

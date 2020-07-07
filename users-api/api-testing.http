@@ -25,3 +25,9 @@ Content-Type: application/json
 
 ###
 DELETE http://localhost:3010/api/v1/users/33
+
+###
+http://localhost:3010/api/v1/users/profile
+
+###
+http://localhost:3010/api/v1/users/profile/110
