@@ -63,14 +63,11 @@ const postUser = (req, res, next) => {
   }
 
   //   #TODO: Add check for exisiting user by email
-
-  console.log("running postUser");
   db.query(
     "INSERT INTO account (first_name, last_name, email, password) VALUES ($1, $2, $3, $4) RETURNING id",
     [user.first_name, user.last_name, user.email, md5(user.password)]
   )
     .then((result) => {
-      console.log("result.id", result);
       if (result.rowCount === 1) {
         return db.query(
           "INSERT INTO profile (id, display_name) VALUES ($1, $2)",
