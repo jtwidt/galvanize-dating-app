@@ -14,7 +14,7 @@ function SignUp() {
           <form className="ui form">
             <div className="field">
               <label>First Name</label>
-              <input type="text" name="first_name" value="First Name"></input>
+              <input type="text" name="first_name" value=""></input>
             </div>{" "}
             <div className="field">
               <label>Last Name</label>
