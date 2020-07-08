@@ -14,12 +14,13 @@ import Login from "./components/Login";
 
 function App() {
   const [userId, setuserId] = useState(34);
+  const [loggedIn, setLoggedIn] = useState(false);
 
-  useEffect(() => {
-    // return () => {
-    //   cleanup
-    // }
-  }, [userId]);
+  // useEffect(() => {
+  //   // return () => {
+  //   //   cleanup
+  //   // }
+  // }, [userId]);
 
   return (
     <Router>
@@ -41,7 +42,7 @@ function App() {
             </NavLink>
             {/* </div> */}
             <NavLink to="/login" className="item" activeClassName="active">
-              Login
+              {`${loggedIn ? "LogOut" : "Login"}`}
             </NavLink>
           </div>
         </div>

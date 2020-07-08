@@ -9,6 +9,24 @@ const baseURL = "/api/v1/";
 //app.use setup
 app.use(bodyParser.json());
 
+// custom middleware
+const logger = function (req, res, next) {
+  console.log(
+    `[${new Date().toJSON()}] - ${req.method} ${req.url} ${JSON.stringify(
+      req.body
+    )}`
+  );
+  next();
+};
+const allowCrossDomain = function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "*");
+  res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE");
+  next();
+};
+app.use(logger);
+app.use(allowCrossDomain);
+
 //user routes
 app.get(baseURL + "users/", query.getUsers);
 app.get(baseURL + "users/:userid", query.getUsers);

@@ -20,7 +20,7 @@ function Login() {
               <label>Password</label>
               <input type="text"></input>{" "}
             </div>{" "}
-            <button class="ui primary button">Login</button>
+            <button className="ui primary button">Login</button>
           </form>
         </div>
       </div>

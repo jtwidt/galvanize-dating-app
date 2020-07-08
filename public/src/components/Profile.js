@@ -2,18 +2,17 @@ import React from "react";
 import { useState, useEffect } from "react";
 
 import Dropdown from "./Dropdown";
+const options = [
+  { label: "Gemini", value: "gemini" },
+  { label: "Pisces", value: "pisces" },
+  { label: "Leo", value: "leo" },
+  { label: "Capricorn", value: "capricorn" },
+];
 
 function Profile({ userId }) {
   const [userProfile, setUserProfile] = useState({});
   const [loading, setLoading] = useState(true);
   const [zodiac, setZodiac] = useState({});
-
-  const options = [
-    { label: "Gemini", value: "gemini" },
-    { label: "Pisces", value: "pisces" },
-    { label: "Leo", value: "leo" },
-    { label: "Capricorn", value: "capricorn" },
-  ];
 
   useEffect(() => {
     fetch(`http://localhost:3010/api/v1/users/profile/${userId}`)
@@ -28,7 +27,7 @@ function Profile({ userId }) {
         );
       })
       .catch((err) => console.log(err));
-  }, [userId]);
+  }, [userId, options]);
 
   // #TODO Add success/error messages
   const onFormSubmit = (event) => {
@@ -47,7 +46,6 @@ function Profile({ userId }) {
 
   return (
     <div className="ui centered grid">
-      {/* {console.log(userProfile)} */}
       <div className="ten wide column">
         <div className="ui container">
           <h1 className="ui center aligned icon header">Profile</h1>
@@ -137,6 +135,7 @@ function Profile({ userId }) {
                 options={options}
                 zodiac={zodiac}
                 onZodiacChange={setZodiac}
+                inputLabel="Zodiac"
               />
             </div>
             <button className="ui right floated primary button">Update</button>
