@@ -14,7 +14,7 @@ const ChatList = (props) => {
   const { classes } = props;
 
   const newChat = () => {
-    console.log('New chat');
+    props.newChat();
   };
 
   const selectChat = (chatIndex) => {

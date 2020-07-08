@@ -87,9 +87,7 @@ const addConversation = (request, response) => {
             if (error) {
               throw error;
             }
-            response
-              .status(201)
-              .send(JSON.stringify('New conversation created'));
+            response.status(201).send(JSON.stringify(conversationId));
           }
         );
       }

@@ -5,6 +5,7 @@ import { Button, withStyles } from '@material-ui/core';
 import styles from './styles';
 import ChatView from '../chatview/ChatView';
 import ChatTextBox from '../chattextbox/ChatTextBox';
+import NewChat from '../newchat/NewChat';
 
 const Dashboard = (props) => {
   const [selectedChatId, setSelectedChatId] = useState(null);
@@ -18,9 +19,11 @@ const Dashboard = (props) => {
   const [unread, setUnread] = useState([]);
   const [unreadFlag, setUnreadFlag] = useState(true);
   const [rerenderChats, setRerenderChats] = useState(true);
+  const [sendChat, setSendChat] = useState({});
 
   const selectChat = (chatIndex) => {
     setSelectedChatId(chatIndex);
+    setRerenderChats(true);
     setRerender(true);
     messageRead();
   };
@@ -41,9 +44,6 @@ const Dashboard = (props) => {
 
   const clickedChatWhereNotSender = () => {
     if (selectedChat !== null) {
-      console.log(
-        selectedChat[selectedChat.length - 1].reciever === currentUserId
-      );
       return selectedChat[selectedChat.length - 1].reciever === currentUserId;
     }
   };
@@ -60,11 +60,13 @@ const Dashboard = (props) => {
     setUnreadFlag(true);
   };
 
-  const submitMsg = (msg) => {
-    let otherUserId =
-      selectedChat[0].sender === currentUserId
-        ? selectedChat[0].reciever
-        : selectedChat[0].sender;
+  const submitMsg = (msg, otherUserId = null) => {
+    if (selectedChat !== null && otherUserId === null) {
+      let otherUserId =
+        selectedChat[0].sender === currentUserId
+          ? selectedChat[0].reciever
+          : selectedChat[0].sender;
+    }
 
     let msgObj = {
       sender: currentUserId,
@@ -72,6 +74,24 @@ const Dashboard = (props) => {
       message: msg,
     };
     setSendMsg(msgObj);
+  };
+
+  const newChat = () => {
+    setNewChatFormVisible(true);
+    setSelectedChatId(null);
+    setSelectedChat(null);
+  };
+
+  const submitNewChat = (newChat) => {
+    setSendChat(newChat);
+    setRerenderChats(true);
+    setNewChatFormVisible(false);
+  };
+
+  const goToChat = (chatIndex, recieverId, message) => {
+    setSelectedChatId(chatIndex);
+    submitMsg(message, recieverId);
+    setNewChatFormVisible(false);
   };
 
   useEffect(
@@ -117,6 +137,19 @@ const Dashboard = (props) => {
   }, [sendMsg]);
 
   useEffect(() => {
+    let convoId;
+    if (sendChat !== null) {
+      axios
+        .post(`http://localhost:3000/api/messages/`, sendChat)
+        .then((response) => {
+          convoId = response.data;
+          setSendChat(null);
+          selectChat(convoId);
+        });
+    }
+  }, [sendChat]);
+
+  useEffect(() => {
     if (unreadFlag === true) {
       const fetchData = async () => {
         const response = await axios.get(
@@ -145,6 +178,7 @@ const Dashboard = (props) => {
           currentUser={currentUserId}
           allUsers={allUsers}
           unread={unread}
+          newChat={newChat}
         ></ChatList>
         {newChatFormVisible ? null : (
           <ChatView
@@ -158,6 +192,15 @@ const Dashboard = (props) => {
             submitMsg={submitMsg}
             messageRead={messageRead}
           ></ChatTextBox>
+        ) : null}
+        {newChatFormVisible ? (
+          <NewChat
+            allUsers={allUsers}
+            chats={chats}
+            currentUser={currentUserId}
+            submitNewChat={submitNewChat}
+            goToChat={goToChat}
+          ></NewChat>
         ) : null}
         <Button
           variant="contained"
