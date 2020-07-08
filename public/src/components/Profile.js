@@ -1,9 +1,19 @@
 import React from "react";
 import { useState, useEffect } from "react";
 
+import Dropdown from "./Dropdown";
+
 function Profile({ userId }) {
   const [userProfile, setUserProfile] = useState({});
   const [loading, setLoading] = useState(true);
+  const [zodiac, setZodiac] = useState({});
+
+  const options = [
+    { label: "Gemini", value: "gemini" },
+    { label: "Pisces", value: "pisces" },
+    { label: "Leo", value: "leo" },
+    { label: "Capricorn", value: "capricorn" },
+  ];
 
   useEffect(() => {
     fetch(`http://localhost:3010/api/v1/users/profile/${userId}`)
@@ -11,18 +21,24 @@ function Profile({ userId }) {
       .then((json) => {
         setUserProfile(json.data[0]);
         setLoading(false);
-        console.log(json.data[0]);
+        setZodiac(
+          options.filter(
+            (option) => option.value === json.data[0].zodiac.toLowerCase()
+          )[0]
+        );
       })
       .catch((err) => console.log(err));
   }, [userId]);
 
+  // #TODO Add success/error messages
   const onFormSubmit = (event) => {
     event.preventDefault(); // Prevent submit button from reloading page/form
+    let body = { ...userProfile, zodiac: zodiac.value };
     // Make PUT fetch call to API server to update user
     fetch(`http://localhost:3010/api/v1/users/profile/${userId}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(userProfile),
+      body: JSON.stringify(body),
     })
       .then((res) => res.json())
       .then((json) => console.log(json))
@@ -117,24 +133,12 @@ function Profile({ userId }) {
                   }
                 ></input>{" "}
               </div>
-              <div className="field">Add Zodiac</div>
+              <Dropdown
+                options={options}
+                zodiac={zodiac}
+                onZodiacChange={setZodiac}
+              />
             </div>
-            {/* <div class="field"> #FIXME Add dropdown based on udemy class
-              <label>Zodiac</label>
-              <div class="ui selection dropdown">
-                <input type="hidden" name="gender" />
-                <i class="dropdown icon"></i>
-                <div class="default text">Gender</div>
-                <div class="menu">
-                  <div class="item" data-value="1">
-                    Male
-                  </div>
-                  <div class="item" data-value="0">
-                    Female
-                  </div>
-                </div>
-              </div>
-            </div> */}
             <button className="ui right floated primary button">Update</button>
           </form>
         </div>

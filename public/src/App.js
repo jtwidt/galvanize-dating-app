@@ -13,7 +13,7 @@ import Profile from "./components/Profile";
 import Login from "./components/Login";
 
 function App() {
-  const [userId, setuserId] = useState(1);
+  const [userId, setuserId] = useState(34);
 
   useEffect(() => {
     // return () => {
@@ -25,7 +25,6 @@ function App() {
     <Router>
       <div className="App">
         <div className="ui pointing menu">
-          {/* #FIXME Add change to active pointer */}
           <NavLink to="/signup" className="item" activeClassName="active">
             Home
           </NavLink>
