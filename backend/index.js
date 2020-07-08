@@ -13,6 +13,19 @@ app.use(
   })
 );
 
+const logger = function (req, res, next) {
+  console.log(`[${new Date().toJSON()}] - ${req.method} ${req.url}`);
+  next();
+};
+const allowCrossDomain = function (req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE');
+  next();
+};
+app.use(logger);
+app.use(allowCrossDomain);
+
 app.get('/api/messageList/:user_id', db.getChats);
 app.get('/api/messages/:conversation_id', db.getConversation);
 app.get('/api/unread/:user_id', db.getUnread);
@@ -22,7 +35,7 @@ app.post('/api/messages', db.addConversation);
 
 app.delete('/api/messages/:type/:id', db.deleteConversations);
 
-app.put('/api/messages/:conversation_id/:user_id', db.updateRead);
+app.put('/api/messages/:conversation_id/:reciever_id', db.updateRead);
 
 // Temporary until other endpoints are configured
 app.get('/users/:reciever_id', (request, response) => {

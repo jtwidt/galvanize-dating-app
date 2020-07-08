@@ -26,7 +26,7 @@ const getChats = (request, response) => {
 const getConversation = (request, response) => {
   let conversationId = parseInt(request.params.conversation_id);
   pool.query(
-    'SELECT conversation_id as convoid, id as msgid, sender_id as sender, reciever_id as reciever, message, sent_time as time FROM messages WHERE conversation_id = $1 ORDER BY msgid',
+    'SELECT conversation_id as convoid, id as msgid, sender_id as sender, reciever_id as reciever, message, sent_time as time, has_read as read FROM messages WHERE conversation_id = $1 ORDER BY msgid',
     [conversationId],
     (error, results) => {
       if (error) {
@@ -79,17 +79,19 @@ const addConversation = (request, response) => {
         if (error) {
           throw error;
         }
-        conversationId = results.rows[0];
-      }
-    );
-    pool.query(
-      'INSERT INTO messages (conversation_id, sender_id, reciever_id, message) VALUES ($1, $2, $3, $4)',
-      [conversationId, sender, reciever, message],
-      (error, results) => {
-        if (error) {
-          throw error;
-        }
-        response.status(201).send(JSON.stringify('New conversation created'));
+        conversationId = results.rows[0].id;
+        pool.query(
+          'INSERT INTO messages (conversation_id, sender_id, reciever_id, message) VALUES ($1, $2, $3, $4)',
+          [conversationId, sender, reciever, message],
+          (error, results) => {
+            if (error) {
+              throw error;
+            }
+            response
+              .status(201)
+              .send(JSON.stringify('New conversation created'));
+          }
+        );
       }
     );
   }
@@ -154,9 +156,9 @@ const updateRead = (request, response) => {
 module.exports = {
   getChats,
   getConversation,
+  getUnread,
   addMessage,
   addConversation,
   deleteConversations,
   updateRead,
-  getUnread,
 };

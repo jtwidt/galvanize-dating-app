@@ -15,10 +15,14 @@ const Dashboard = (props) => {
   const [selectedChat, setSelectedChat] = useState(null);
   const [sendMsg, setSendMsg] = useState(null);
   const [rerender, setRerender] = useState(true);
+  const [unread, setUnread] = useState([]);
+  const [unreadFlag, setUnreadFlag] = useState(true);
+  const [rerenderChats, setRerenderChats] = useState(true);
 
   const selectChat = (chatIndex) => {
     setSelectedChatId(chatIndex);
     setRerender(true);
+    messageRead();
   };
 
   const changeUser = (userId) => {
@@ -29,7 +33,31 @@ const Dashboard = (props) => {
     }
     setSelectedChat(null);
     setSelectedChatId(null);
+    setRerenderChats(true);
     setRerender(true);
+    setUnread([]);
+    setUnreadFlag(true);
+  };
+
+  const clickedChatWhereNotSender = () => {
+    if (selectedChat !== null) {
+      console.log(
+        selectedChat[selectedChat.length - 1].reciever === currentUserId
+      );
+      return selectedChat[selectedChat.length - 1].reciever === currentUserId;
+    }
+  };
+
+  const messageRead = () => {
+    if (selectedChatId !== null) {
+      if (clickedChatWhereNotSender()) {
+        axios.put(
+          `http://localhost:3000/api/messages/${selectedChatId}/${currentUserId}`,
+          null
+        );
+      }
+    }
+    setUnreadFlag(true);
   };
 
   const submitMsg = (msg) => {
@@ -46,17 +74,23 @@ const Dashboard = (props) => {
     setSendMsg(msgObj);
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await axios.get(
-        `http://localhost:3000/api/messageList/${currentUserId}`
-      );
-      setChats(response.data);
-      const usersResponse = await axios.get('http://localhost:3000/users');
-      setAllUsers(usersResponse.data);
-    };
-    fetchData();
-  }, [currentUserId]);
+  useEffect(
+    () => {
+      if (rerenderChats === true) {
+        const fetchData = async () => {
+          const response = await axios.get(
+            `http://localhost:3000/api/messageList/${currentUserId}`
+          );
+          setChats(response.data);
+          const usersResponse = await axios.get('http://localhost:3000/users');
+          setAllUsers(usersResponse.data);
+        };
+        fetchData();
+      }
+    },
+    [currentUserId],
+    [rerenderChats]
+  );
 
   useEffect(() => {
     if (selectedChatId !== null && rerender === true) {
@@ -82,6 +116,21 @@ const Dashboard = (props) => {
     }
   }, [sendMsg]);
 
+  useEffect(() => {
+    if (unreadFlag === true) {
+      const fetchData = async () => {
+        const response = await axios.get(
+          `http://localhost:3000/api/unread/${currentUserId}`
+        );
+        setUnread(
+          response.data.map((conversation) => conversation.conversation_id)
+        );
+      };
+      fetchData();
+      setUnreadFlag(false);
+    }
+  }, [unreadFlag]);
+
   const { classes } = props;
 
   if (allUsers === [] && chats === []) {
@@ -95,6 +144,7 @@ const Dashboard = (props) => {
           selectedChat={selectedChatId}
           currentUser={currentUserId}
           allUsers={allUsers}
+          unread={unread}
         ></ChatList>
         {newChatFormVisible ? null : (
           <ChatView
@@ -104,7 +154,10 @@ const Dashboard = (props) => {
           ></ChatView>
         )}
         {selectedChat !== null && !newChatFormVisible ? (
-          <ChatTextBox submitMsg={submitMsg}></ChatTextBox>
+          <ChatTextBox
+            submitMsg={submitMsg}
+            messageRead={messageRead}
+          ></ChatTextBox>
         ) : null}
         <Button
           variant="contained"

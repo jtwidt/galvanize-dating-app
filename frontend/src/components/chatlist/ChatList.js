@@ -8,6 +8,7 @@ import Avatar from '@material-ui/core/Avatar';
 import styles from './styles';
 import Divider from '@material-ui/core/Divider';
 import Button from '@material-ui/core/Button';
+import { Badge } from '@material-ui/core';
 
 const ChatList = (props) => {
   const { classes } = props;
@@ -60,7 +61,13 @@ const ChatList = (props) => {
                   alignItems="flex-start"
                 >
                   <ListItemAvatar>
-                    <Avatar alt="Joe Kerr" src={avatarImg} />
+                    {props.unread.indexOf(chat.id) > -1 ? (
+                      <Badge color="primary" variant="dot">
+                        <Avatar alt="Joe Kerr" src={avatarImg} />
+                      </Badge>
+                    ) : (
+                      <Avatar alt="Joe Kerr" src={avatarImg} />
+                    )}
                   </ListItemAvatar>
                   <ListItemText
                     primary={`${firstName} ${lastName}`}
