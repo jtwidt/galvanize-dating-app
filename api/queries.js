@@ -167,7 +167,7 @@ const getProfile = (req, res) => {
   }
 
   db.query(
-    "SELECT profile.*, a.first_name, a.last_name, a.deactivated FROM profile JOIN account AS a ON profile.id = a.id WHERE profile.id = $1;",
+    "SELECT profile.*, a.first_name, a.last_name, a.email, a.deactivated FROM profile JOIN account AS a ON profile.id = a.id WHERE profile.id = $1;",
     [Number(id)]
   ).then((result) => {
     if (result.rowCount === 1) {

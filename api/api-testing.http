@@ -35,9 +35,9 @@ http://localhost:3010/api/v1/users/profile
 http://localhost:3010/api/v1/users/profile/1
 
 ###
-PUT http://localhost:3010/api/v1/users/profile/34
+PUT http://localhost:3010/api/v1/users/profile/1
 Content-Type: application/json
 
 {
-    "display_name":"newDisplayName"
+    "display_name":"TestDisplayName"
 }
