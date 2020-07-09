@@ -20,14 +20,16 @@ const Dropdown = ({ options, zodiac, onZodiacChange, inputLabel }) => {
         </div>
       );
     });
+  const onBodyClick = (e) => {
+    if (ref.current.contains(e.target)) {
+      return;
+    }
+    setOpen(false);
+  };
 
   useEffect(() => {
-    document.body.addEventListener("click", (e) => {
-      if (ref.current.contains(e.target)) {
-        return;
-      }
-      setOpen(false);
-    });
+    document.body.addEventListener("click", onBodyClick);
+    return () => document.body.removeEventListener("click", onBodyClick);
   }, []);
 
   return (
