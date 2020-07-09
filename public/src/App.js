@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   BrowserRouter as Router,
   Switch,
@@ -12,15 +12,38 @@ import SignUp from "./components/SignUp";
 import Profile from "./components/Profile";
 import Login from "./components/Login";
 
-function App() {
-  const [userId, setuserId] = useState(34);
-  const [loggedIn, setLoggedIn] = useState(false);
+let init = { success: true, userId: 34 };
 
-  // useEffect(() => {
-  //   // return () => {
-  //   //   cleanup
-  //   // }
-  // }, [userId]);
+function App() {
+  const [loggedIn, setLoggedIn] = useState(init);
+
+  const loginButton = () => {
+    const logOut = () => {};
+
+    if (loggedIn.success) {
+      return (
+        <React.Fragment>
+          <NavLink to="/profile" className="item" activeClassName="active">
+            Profile
+          </NavLink>
+          <NavLink
+            to="/login"
+            className="item"
+            activeClassName="active"
+            onClick={logOut}
+          >
+            LogOut
+          </NavLink>
+        </React.Fragment>
+      );
+    } else {
+      return (
+        <NavLink to="/login" className="item" activeClassName="active">
+          Login
+        </NavLink>
+      );
+    }
+  };
 
   return (
     <Router>
@@ -30,26 +53,16 @@ function App() {
             Home
           </NavLink>
           <div className="right menu">
-            {/* <div className="item">
-            <div className="ui icon input">
-              <input type="text" placeholder="Search..." />
-              <i className="search link icon"></i>
-            </div>
-          </div> */}
-            {/* <div className="item"> */}
-            <NavLink to="/profile" className="item" activeClassName="active">
-              Profile
-            </NavLink>
-            {/* </div> */}
-            <NavLink to="/login" className="item" activeClassName="active">
-              {`${loggedIn ? "LogOut" : "Login"}`}
-            </NavLink>
+            {/* <NavLink to="/login" className="item" activeClassName="active">
+              {`${loggedIn.success ? "LogOut" : "Login"}`}
+            </NavLink> */}
+            {loginButton()}
           </div>
         </div>
       </div>
       <Switch>
         <Route path="/login">
-          <Login />
+          <Login onUserLogin={setLoggedIn} />
         </Route>
         <Route exact path="/">
           <Redirect to="/signup" />
@@ -58,7 +71,11 @@ function App() {
           <SignUp />
         </Route>
         <Route path="/profile">
-          <Profile userId={userId} />
+          {loggedIn.success ? (
+            <Profile userId={loggedIn.userId} />
+          ) : (
+            <Redirect to="/login" />
+          )}
         </Route>
       </Switch>
     </Router>

@@ -27,7 +27,7 @@ function Profile({ userId }) {
         );
       })
       .catch((err) => console.log(err));
-  }, [userId, options]);
+  }, [userId]);
 
   // #TODO Add success/error messages
   const onFormSubmit = (event) => {
