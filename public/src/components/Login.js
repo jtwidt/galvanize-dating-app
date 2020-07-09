@@ -1,6 +1,5 @@
 import React from "react";
 import { useState } from "react";
-import md5 from "js-md5";
 import { useHistory } from "react-router-dom";
 
 function Login({ onUserLogin }) {

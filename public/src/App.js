@@ -51,15 +51,10 @@ function App() {
     <Router>
       <div className="App">
         <div className="ui pointing menu">
-          <NavLink to="/signup" className="item" activeClassName="active">
+          <NavLink to="/" className="item" activeClassName="active">
             Home
           </NavLink>
-          <div className="right menu">
-            {/* <NavLink to="/login" className="item" activeClassName="active">
-              {`${loggedIn.success ? "LogOut" : "Login"}`}
-            </NavLink> */}
-            {loginButton()}
-          </div>
+          <div className="right menu">{loginButton()}</div>
         </div>
       </div>
       <Switch>
@@ -71,7 +66,11 @@ function App() {
           )}
         </Route>
         <Route exact path="/">
-          <Redirect to="/signup" />
+          {loggedIn.success ? (
+            <Redirect to="/profile" />
+          ) : (
+            <Redirect to="/signup" />
+          )}
         </Route>
         <Route path="/signup">
           <SignUp />
