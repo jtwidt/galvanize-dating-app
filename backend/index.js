@@ -13,6 +13,14 @@ app.use(
   })
 );
 
+const path = require('path');
+
+app.use(express.static(path.join(__dirname, 'build')));
+
+app.get('/', function (request, response) {
+  response.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
+
 const logger = function (req, res, next) {
   console.log(`[${new Date().toJSON()}] - ${req.method} ${req.url}`);
   next();

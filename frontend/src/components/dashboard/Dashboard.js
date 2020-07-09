@@ -51,10 +51,7 @@ const Dashboard = (props) => {
   const messageRead = () => {
     if (selectedChatId !== null) {
       if (clickedChatWhereNotSender()) {
-        axios.put(
-          `http://localhost:3000/api/messages/${selectedChatId}/${currentUserId}`,
-          null
-        );
+        axios.put(`/api/messages/${selectedChatId}/${currentUserId}`, null);
       }
     }
     setUnreadFlag(true);
@@ -91,11 +88,9 @@ const Dashboard = (props) => {
     () => {
       if (rerenderChats === true) {
         const fetchData = async () => {
-          const response = await axios.get(
-            `http://localhost:3000/api/messageList/${currentUserId}`
-          );
+          const response = await axios.get(`/api/messageList/${currentUserId}`);
           setChats(response.data);
-          const usersResponse = await axios.get('http://localhost:3000/users');
+          const usersResponse = await axios.get('/users');
           setAllUsers(usersResponse.data);
         };
         fetchData();
@@ -108,9 +103,7 @@ const Dashboard = (props) => {
   useEffect(() => {
     if (selectedChatId !== null && rerender === true) {
       const fetchChatData = async () => {
-        const chatResponse = await axios.get(
-          `http://localhost:3000/api/messages/${selectedChatId}`
-        );
+        const chatResponse = await axios.get(`/api/messages/${selectedChatId}`);
         setSelectedChat(chatResponse.data);
       };
       fetchChatData();
@@ -120,10 +113,7 @@ const Dashboard = (props) => {
 
   useEffect(() => {
     if (sendMsg !== null) {
-      axios.post(
-        `http://localhost:3000/api/messages/${selectedChatId}`,
-        sendMsg
-      );
+      axios.post(`/api/messages/${selectedChatId}`, sendMsg);
       setSendMsg(null);
       setRerender(true);
     }
@@ -132,22 +122,18 @@ const Dashboard = (props) => {
   useEffect(() => {
     let convoId;
     if (sendChat !== null) {
-      axios
-        .post(`http://localhost:3000/api/messages/`, sendChat)
-        .then((response) => {
-          convoId = response.data;
-          setSendChat(null);
-          selectChat(convoId);
-        });
+      axios.post(`/api/messages/`, sendChat).then((response) => {
+        convoId = response.data;
+        setSendChat(null);
+        selectChat(convoId);
+      });
     }
   }, [sendChat]);
 
   useEffect(() => {
     if (unreadFlag === true) {
       const fetchData = async () => {
-        const response = await axios.get(
-          `http://localhost:3000/api/unread/${currentUserId}`
-        );
+        const response = await axios.get(`/api/unread/${currentUserId}`);
         setUnread(
           response.data.map((conversation) => conversation.conversation_id)
         );
