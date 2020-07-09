@@ -37,6 +37,7 @@ function Login({ onUserLogin }) {
               <input
                 type="text"
                 value={user.email}
+                autoComplete="email username"
                 onChange={(e) => setUser({ ...user, email: e.target.value })}
               ></input>{" "}
             </div>{" "}
@@ -45,6 +46,7 @@ function Login({ onUserLogin }) {
               <input
                 type="password"
                 value={user.password}
+                autoComplete="current-password"
                 onChange={(e) => setUser({ ...user, password: e.target.value })}
               ></input>{" "}
             </div>{" "}

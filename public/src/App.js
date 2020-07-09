@@ -12,13 +12,15 @@ import SignUp from "./components/SignUp";
 import Profile from "./components/Profile";
 import Login from "./components/Login";
 
-let init = { success: true, userId: 34 };
+let init = { success: false, userId: 36 };
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(init);
 
   const loginButton = () => {
-    const logOut = () => {};
+    const logOut = () => {
+      setLoggedIn(false);
+    };
 
     if (loggedIn.success) {
       return (
