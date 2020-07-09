@@ -7,6 +7,8 @@ services:
       - "dating-app-api"
     ports:
       - "3000:3000"
+    volumes:
+      - ./public:/src/app
     stdin_open: true
 
   dating-app-api:
@@ -30,6 +32,8 @@ services:
       - POSTGRES_DB=galvanize_dating_app
       - POSTGRES_USER=dev
       - POSTGRES_PASSWORD=dev-password
+    ports:
+      - 3020:5432
     volumes:
       #   - ./init.sql:/docker-entrypoint-initdb.d/init.sql
       - ./postgres-data:/var/lib/postgresql/data
