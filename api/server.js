@@ -36,6 +36,7 @@ app.put(baseURL + "users/:userid", query.putUser);
 app.delete(baseURL + "users/:userid", query.deleteUser);
 
 // profile routes
+// app.get(baseURL + "users/profile/", query.getProfile);
 app.get(baseURL + "users/profile/:userid", query.getProfile);
 app.put(baseURL + "users/profile/:userid", query.putProfile);
 

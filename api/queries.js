@@ -3,7 +3,7 @@ const { Pool } = require("pg");
 const md5 = require("md5");
 const db = new Pool({
   user: "dev",
-  host: "localhost",
+  host: process.env.PGHOST,
   database: "galvanize_dating_app",
   password: "dev-password",
   port: 5432,
@@ -160,6 +160,7 @@ const deleteUser = (req, res) => {
 };
 
 const getProfile = (req, res) => {
+  console.log("in getProfile");
   let id = req.params.userid;
   if (!id) {
     // #FIXME Doesn't provide this response if no id is provided
@@ -174,6 +175,7 @@ const getProfile = (req, res) => {
     if (result.rowCount === 1) {
       response.message = "OK";
       response.data = result.rows;
+      console.log(response);
       res.status(200).send(response);
     } else {
       response.message = "ERROR - User with that ID not found";

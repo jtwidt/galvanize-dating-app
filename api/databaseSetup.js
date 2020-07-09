@@ -3,13 +3,13 @@ const fs = require("fs");
 const faker = require("faker");
 const db = new Pool({
   user: "dev",
-  host: "localhost",
+  host: process.env.PGHOST,
   database: "galvanize_dating_app",
   password: "dev-password",
   port: 5432,
 });
 
-let users = JSON.parse(fs.readFileSync("../fakeUsers.json"));
+let users = JSON.parse(fs.readFileSync("fakeUsers.json"));
 
 let setUpDatabase = () => {
   db.query("DROP TABLE IF EXISTS account, profile CASCADE")
