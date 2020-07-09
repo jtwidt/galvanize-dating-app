@@ -106,6 +106,3 @@ dist
 #VS Code settings files
 *.code-workspace
 *.workspace
-
-#postgres data from containerized db
-postgres-data/**
