@@ -9,7 +9,6 @@ function Login({ onUserLogin }) {
 
   const onFormSubmit = (event) => {
     event.preventDefault();
-    console.log(user);
     fetch(`http://localhost:3010/api/v1/users/login/`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -19,8 +18,6 @@ function Login({ onUserLogin }) {
       .then((json) => {
         if (json.data.loginSuccess === true) {
           onUserLogin({ success: true, userId: json.data.userId });
-          // console.log(json.data.userId);
-          // setUserId(json.data.userId);
           history.push("/profile");
         }
       })
@@ -34,7 +31,7 @@ function Login({ onUserLogin }) {
           <h1 className="ui center aligned icon header">
             <i className="lock icon"></i>Login
           </h1>
-          <form className="ui form" onSubmit={onFormSubmit}>
+          <form className="ui form" onSubmit={(event) => onFormSubmit(event)}>
             <div className="field">
               <label>Email</label>
               <input
