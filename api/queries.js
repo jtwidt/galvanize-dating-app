@@ -225,6 +225,36 @@ const putProfile = (req, res) => {
       res.status(200).send(response);
     });
 };
+const userLogin = (req, res) => {
+  let user = req.body;
+  let userProps = ["email", "password"];
+  for (let key of userProps) {
+    if (!user[key] || user[key] === "") {
+      response.message = "ERROR - All fields must have a value";
+      response.data = [];
+      res.status(400).send(response);
+      return;
+    }
+  }
+  db.query("SELECT * FROM account WHERE email = $1", [user.email]).then(
+    (result) => {
+      if (result.rowCount === 1) {
+        if (result.rows[0].password === user.password) {
+          response.message = "OK";
+          response.data = {
+            token: md5(user.password + user.email),
+            loginSuccess: true,
+            userId: result.rows[0].id,
+          };
+          res.status(200).send(response);
+        }
+      } else {
+        response.message = "ERROR - Invalid username or password";
+        res.status(404).send(response);
+      }
+    }
+  );
+};
 
 module.exports = {
   getUsers,
@@ -233,4 +263,5 @@ module.exports = {
   deleteUser,
   getProfile,
   putProfile,
+  userLogin,
 };

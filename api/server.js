@@ -39,4 +39,7 @@ app.delete(baseURL + "users/:userid", query.deleteUser);
 app.get(baseURL + "users/profile/:userid", query.getProfile);
 app.put(baseURL + "users/profile/:userid", query.putProfile);
 
+// login
+app.post(baseURL + "users/login", query.userLogin);
+
 app.listen(PORT, () => console.log(`Listening on http://localhost:${PORT}`));
