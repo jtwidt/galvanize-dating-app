@@ -7,6 +7,7 @@ import { withStyles } from '@material-ui/core/styles';
 const ChatTextBox = (props) => {
   const { classes } = props;
   const [chatText, setChatText] = useState('');
+  const [emojiPickerState, setEmojiPickerState] = useState(false);
 
   const userTyping = (e) => {
     e.keyCode === 13 ? submitMessage() : setChatText(e.target.value);
@@ -18,7 +19,11 @@ const ChatTextBox = (props) => {
 
   const submitMessage = () => {
     if (messageValid(chatText)) {
-      props.submitMsg(chatText);
+      let otherUserId =
+        props.selectedChat[0].sender === props.currentUser
+          ? props.selectedChat[0].reciever
+          : props.selectedChat[0].sender;
+      props.submitMsg(chatText, otherUserId);
       document.getElementById('chattextbox').value = '';
     }
   };

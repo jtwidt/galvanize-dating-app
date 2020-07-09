@@ -17,7 +17,7 @@ const styles = (theme) => ({
   },
 
   chatTextBox: {
-    width: 'calc(100% - 25px)',
+    width: 'calc(100% - 75px)',
   },
 });
 

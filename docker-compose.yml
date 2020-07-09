@@ -1,7 +1,15 @@
 version: '3'
 
 services:
-  backend:
+  frontend:
+    container_name: frontend
+    build: frontend/
+    ports:
+      - 3001:3000
+    stdin_open: true
+
+  api:
+    container_name: api
     build: backend/
     depends_on:
       - 'database'
@@ -9,4 +17,5 @@ services:
       - '3000:3000'
 
   database:
+    container_name: database
     build: database/

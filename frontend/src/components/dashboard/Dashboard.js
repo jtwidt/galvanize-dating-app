@@ -60,14 +60,7 @@ const Dashboard = (props) => {
     setUnreadFlag(true);
   };
 
-  const submitMsg = (msg, otherUserId = null) => {
-    if (selectedChat !== null && otherUserId === null) {
-      let otherUserId =
-        selectedChat[0].sender === currentUserId
-          ? selectedChat[0].reciever
-          : selectedChat[0].sender;
-    }
-
+  const submitMsg = (msg, otherUserId) => {
     let msgObj = {
       sender: currentUserId,
       reciever: otherUserId,
@@ -191,6 +184,8 @@ const Dashboard = (props) => {
           <ChatTextBox
             submitMsg={submitMsg}
             messageRead={messageRead}
+            currentUser={currentUserId}
+            selectedChat={selectedChat}
           ></ChatTextBox>
         ) : null}
         {newChatFormVisible ? (
