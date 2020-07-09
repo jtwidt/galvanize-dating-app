@@ -57,6 +57,4 @@ app.get('/users', (request, response) => {
 // end of temporary block
 
 const port = 3000;
-app.listen(port, () =>
-  console.log(`Database Project API listening on http://localhost:${port}`)
-);
+app.listen(process.env.PORT || 3000, '0.0.0.0');
