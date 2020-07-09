@@ -108,4 +108,4 @@ dist
 *.workspace
 
 #postgres data from containerized db
-postgres-data/
+postgres-data/**
