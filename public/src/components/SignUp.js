@@ -11,7 +11,8 @@ const init = {
   password1: "",
   password2: "",
 };
-
+// #TODO Implement duplicate email/account error handling
+// #TODO Implement password mismatch/empty field error handling
 function SignUp() {
   const [user, setUser] = useState(init);
   const [loading, setLoading] = useState(false);

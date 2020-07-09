@@ -12,7 +12,7 @@ import SignUp from "./components/SignUp";
 import Profile from "./components/Profile";
 import Login from "./components/Login";
 
-let init = { success: false, userId: 36 };
+let init = { success: true, userId: 36 };
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(init);
@@ -64,7 +64,11 @@ function App() {
       </div>
       <Switch>
         <Route path="/login">
-          <Login onUserLogin={setLoggedIn} />
+          {loggedIn.success ? (
+            <Redirect to="/profile" />
+          ) : (
+            <Login onUserLogin={setLoggedIn} />
+          )}
         </Route>
         <Route exact path="/">
           <Redirect to="/signup" />

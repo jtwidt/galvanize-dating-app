@@ -21,7 +21,7 @@ function Login({ onUserLogin }) {
           history.push("/profile");
         }
       })
-      .catch((err) => console.log(err));
+      .catch((err) => console.log("errored out", err));
   };
 
   return (

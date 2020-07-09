@@ -44,6 +44,7 @@ const getUsers = (req, res) => {
     });
 };
 
+// #TODO Use unique to enforce no duplicate emails (ie. avoid duplicate accounts)
 const postUser = (req, res, next) => {
   let user = req.body;
   let userProps = [
