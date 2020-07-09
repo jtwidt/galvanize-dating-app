@@ -1,9 +1,10 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 const Dropdown = ({ options, zodiac, onZodiacChange, inputLabel }) => {
   const [open, setOpen] = useState(false);
-  //  #FIXME Doesn't close when clicking in the body - See udemy video
+  const ref = useRef();
+
   const renderedOptions = options
     .filter((option) => option.value !== zodiac.value)
     .map((option) => {
@@ -21,13 +22,16 @@ const Dropdown = ({ options, zodiac, onZodiacChange, inputLabel }) => {
     });
 
   useEffect(() => {
-    document.body.addEventListener("click", () => {
+    document.body.addEventListener("click", (e) => {
+      if (ref.current.contains(e.target)) {
+        return;
+      }
       setOpen(false);
     });
   }, []);
 
   return (
-    <div className="field">
+    <div ref={ref} className="field">
       <label className="label">{inputLabel}</label>
       <div
         className={`ui selection dropdown ${open ? "visible active" : ""}`}
