@@ -11,10 +11,10 @@ services:
   #   stdin_open: true
 
   api:
-    container_name: api
+    container_name: web
     build:
       context: backend/
-      dockerfile: Dockerfile.api
+      dockerfile: Dockerfile.web
     depends_on:
       - 'database'
     ports:
