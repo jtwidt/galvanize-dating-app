@@ -160,7 +160,6 @@ const deleteUser = (req, res) => {
 };
 
 const getProfile = (req, res) => {
-  console.log("in getProfile");
   let id = req.params.userid;
   if (!id) {
     // #FIXME Doesn't provide this response if no id is provided
@@ -175,7 +174,6 @@ const getProfile = (req, res) => {
     if (result.rowCount === 1) {
       response.message = "OK";
       response.data = result.rows;
-      console.log(response);
       res.status(200).send(response);
     } else {
       response.message = "ERROR - User with that ID not found";
@@ -242,7 +240,7 @@ const userLogin = (req, res) => {
   db.query("SELECT * FROM account WHERE email = $1", [user.email]).then(
     (result) => {
       if (result.rowCount === 1) {
-        if (result.rows[0].password === user.password) {
+        if (result.rows[0].password === md5(user.password)) {
           response.message = "OK";
           response.data = {
             token: md5(user.password + user.email),

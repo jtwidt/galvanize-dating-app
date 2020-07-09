@@ -12,7 +12,7 @@ function Login({ onUserLogin }) {
     fetch(`http://localhost:3010/api/v1/users/login/`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...user, password: md5(user.password) }),
+      body: JSON.stringify({ ...user, password: user.password }),
     })
       .then((res) => res.json())
       .then((json) => {

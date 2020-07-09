@@ -12,7 +12,7 @@ import SignUp from "./components/SignUp";
 import Profile from "./components/Profile";
 import Login from "./components/Login";
 
-let init = { success: true, userId: 36 };
+let init = { success: true, userId: 1 };
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(init);

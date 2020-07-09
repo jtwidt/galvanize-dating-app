@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
-import md5 from "js-md5";
+// import md5 from "js-md5";
 
 const init = {
   first_name: "",
@@ -30,7 +30,7 @@ function SignUp() {
     fetch(`http://localhost:3010/api/v1/users/`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...user, password: md5(user.password1) }),
+      body: JSON.stringify({ ...user, password: user.password1 }),
     })
       .then((res) => res.json())
       .then((json) => {
@@ -137,6 +137,7 @@ function SignUp() {
                 Your user registration was successful.
               </div>
               <button
+                type="button"
                 className="ui right floated compact primary button"
                 onClick={() => history.push("/login")}
               >
