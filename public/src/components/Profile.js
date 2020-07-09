@@ -11,8 +11,10 @@ const options = [
 
 function Profile({ userId }) {
   const [userProfile, setUserProfile] = useState({});
+  const [updated, setUpdated] = useState(false);
   const [loading, setLoading] = useState(true);
   const [zodiac, setZodiac] = useState({});
+  const [success, setSuccess] = useState(false);
 
   useEffect(() => {
     fetch(`http://localhost:3010/api/v1/users/profile/${userId}`)
@@ -25,11 +27,15 @@ function Profile({ userId }) {
             (option) => option.value === json.data[0].zodiac.toLowerCase()
           )[0]
         );
+        setUpdated(false);
       })
       .catch((err) => console.log(err));
   }, [userId]);
 
-  // #TODO Add success/error messages
+  useEffect(() => {
+    setUpdated(true);
+  }, [userProfile]);
+
   const onFormSubmit = (event) => {
     event.preventDefault(); // Prevent submit button from reloading page/form
     let body = { ...userProfile, zodiac: zodiac.value };
@@ -40,7 +46,10 @@ function Profile({ userId }) {
       body: JSON.stringify(body),
     })
       .then((res) => res.json())
-      .then((json) => console.log(json))
+      .then((json) => {
+        console.log(json);
+        setSuccess(true);
+      })
       .catch((err) => console.log(err));
   };
 
@@ -50,7 +59,9 @@ function Profile({ userId }) {
         <div className="ui container">
           <h1 className="ui center aligned icon header">Profile</h1>
           <form
-            className={`ui ${loading ? "loading" : ""} form`}
+            className={`ui ${loading ? "loading" : ""} ${
+              success ? "success" : ""
+            } form`}
             onSubmit={(event) => onFormSubmit(event)}
           >
             <div className="two fields">
@@ -138,7 +149,21 @@ function Profile({ userId }) {
                 inputLabel="Zodiac"
               />
             </div>
-            <button className="ui right floated primary button">Update</button>
+            <div
+              className="ui success message"
+              onClick={() => setSuccess(false)}
+            >
+              <i className="close icon"></i>
+              <div className="header">Profile Updated</div>
+              <p>Your profile has been updated.</p>
+            </div>
+            <button
+              className={`ui ${
+                updated ? "" : "disabled"
+              } right floated primary button`}
+            >
+              Update
+            </button>
           </form>
         </div>
       </div>
