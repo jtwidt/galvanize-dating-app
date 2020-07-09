@@ -75,7 +75,7 @@ const postUser = (req, res, next) => {
         );
       }
     })
-    .then((result) => res.status(200).send("Account created"))
+    .then((result) => res.status(200).json("Account created"))
     .catch((err) => {
       response.message = "ERROR";
       response.data = err.message;
